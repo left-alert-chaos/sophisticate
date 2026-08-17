@@ -21,7 +21,9 @@ impl Go {
         command = command.replace("go ", "");
         let mut words = command.split_whitespace();
 
-        let mut go = Self {..Default::default()};
+        let mut go = Self {
+            ..Default::default()
+        };
 
         //find cutoff
         let mut finished = true;
@@ -78,7 +80,7 @@ impl Go {
         go.searchmoves = searchmoves;
 
         if finished {
-            return Ok(go)
+            return Ok(go);
         }
 
         //The rest of the arguments follow the syntax "vname <value>", so we can use one large loop
@@ -86,12 +88,12 @@ impl Go {
         while let Some(key) = words.next() {
             //get value. if there is no value, something's wrong.
             let Some(value) = words.next() else {
-                return Err(())
+                return Err(());
             };
 
             //parse value to number
             let Ok(num) = value.parse::<u64>() else {
-                return Err(())
+                return Err(());
             };
 
             match key {
@@ -115,7 +117,8 @@ impl Go {
 
 #[derive(Copy, Clone, Default, Debug, PartialEq, Eq)]
 pub enum SearchCutoff {
-    #[default] Infinite, //only time limit applies
+    #[default]
+    Infinite, //only time limit applies
     Mate(i32),
     Nodes(i32),
     Depth(i32),
@@ -127,7 +130,13 @@ mod tests {
 
     #[test]
     fn parse_go() {
-        let go = Go::parse(String::from("go nodes 24 searchmoves e2e4 d2d3 d2d4 wtime 1200000 btime 1200000 winc 1200000"), &mut Default::default()).unwrap();
+        let go = Go::parse(
+            String::from(
+                "go nodes 24 searchmoves e2e4 d2d3 d2d4 wtime 1200000 btime 1200000 winc 1200000",
+            ),
+            &mut Default::default(),
+        )
+        .unwrap();
 
         assert_eq!(go.searchmoves.len(), 3);
         assert_eq!(go.wtime, Some(1200000));
@@ -139,7 +148,12 @@ mod tests {
     #[test]
     //parse() should return an error
     fn parse_bad_go_command() {
-        let go = Go::parse(String::from("go infinite searchmoves nope not today wtime not_a_number btime also_not_a_number"), &mut Default::default());
+        let go = Go::parse(
+            String::from(
+                "go infinite searchmoves nope not today wtime not_a_number btime also_not_a_number",
+            ),
+            &mut Default::default(),
+        );
         assert!(go.is_err());
     }
 }

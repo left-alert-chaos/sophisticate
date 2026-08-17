@@ -124,7 +124,11 @@ impl Ocelot {
         };
 
         //calculate allowed time
-        let go_time = if self.board.turn == board::Color::White {go.wtime} else {go.btime};
+        let go_time = if self.board.turn == board::Color::White {
+            go.wtime
+        } else {
+            go.btime
+        };
         let allowed_time = match go_time {
             Some(time) => self.allowed_time_for_search(time),
             None => f64::INFINITY,
@@ -184,7 +188,10 @@ impl Ocelot {
     fn allowed_time_for_search(&self, time: u64) -> f64 {
         let inverse_priority = 100 - self.board.round as u64;
         let allowed_time = (time as f64 / inverse_priority as f64) * 2.5;
-        println!("Ocelot::allowed_time_for_search(): Returning {allowed_time} due to inverse_priority {inverse_priority} and round {}", self.board.round);
+        println!(
+            "Ocelot::allowed_time_for_search(): Returning {allowed_time} due to inverse_priority {inverse_priority} and round {}",
+            self.board.round
+        );
         allowed_time
     }
 }
